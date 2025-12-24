@@ -311,7 +311,7 @@ function displayUsageTrends(items) {
                 <tr>
                     <th>Item</th>
                     <th>Current Stock</th>
-                    <th>Avg Daily Usage (7 Days)</th>
+                    <th>Est. Weekly Usage</th>
                     <th>Est. Days Left</th>
                     <th>Status</th>
                 </tr>
@@ -325,8 +325,10 @@ function displayUsageTrends(items) {
         if (daysLeft < 5) status = '<span class="status-badge status-low">Critical</span>';
         if (daysLeft > 365) status = '<span class="status-badge status-ok">Stable</span>';
 
-        // Format usage
-        const usageText = item.avgDailyUsage > 0 ? `${item.avgDailyUsage} ${item.unit}/day` : 'No recent usage';
+        // Format usage: Convert Daily to Weekly
+        const dailyRate = parseFloat(item.avgDailyUsage);
+        const weeklyRate = Math.round(dailyRate * 7);
+        const usageText = weeklyRate > 0 ? `${weeklyRate} ${item.unit} / week` : (dailyRate > 0 ? `< 1 ${item.unit} / week` : 'No recent usage');
         const daysText = daysLeft > 365 ? '> 1 Year' : `${daysLeft} days`;
 
         html += `
