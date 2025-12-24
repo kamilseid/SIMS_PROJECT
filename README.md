@@ -7,6 +7,7 @@ A lightweight, web-based inventory management application designed for small bus
 - **🔐 Secure Login**: Admin authentication system to protect inventory data.
 - **📦 Inventory Management**: Add, edit, and delete items with categorization and unit tracking.
 - **⚠️ Low-Stock Alerts**: Visual warnings when items fall below their minimum threshold.
+- **⚡ Quick Stock Actions**: Easily increment (+) or decrement (-) stock directly from the list.
 - **🧠 Smart Predictions**: AI-driven estimation of when stock will run out based on actual 7-day usage history.
 - **📝 Activity Log**: Comprehensive audit trail tracking all user actions (Add/Edit/Delete).
 - **🔍 Search & Filter**: Quickly find items by name or category.

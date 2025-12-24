@@ -157,6 +157,39 @@ app.put('/api/items/:id', (req, res) => {
     });
 });
 
+// Quick Adjust Item Quantity (+/-)
+app.patch('/api/items/:id/adjust', (req, res) => {
+    const { change } = req.body;
+    const { id } = req.params;
+
+    db.get("SELECT name, quantity, unit FROM items WHERE id = ?", [id], (err, row) => {
+        if (err || !row) {
+            res.status(404).json({ error: "Item not found" });
+            return;
+        }
+
+        const newQty = row.quantity + change;
+        if (newQty < 0) {
+            res.status(400).json({ error: "Cannot reduce stock below 0" });
+            return;
+        }
+
+        db.run("UPDATE items SET quantity = ?, last_updated = CURRENT_TIMESTAMP WHERE id = ?", [newQty, id], function (err) {
+            if (err) {
+                res.status(400).json({ error: err.message });
+                return;
+            }
+
+            db.run(`INSERT INTO usage_logs (item_id, quantity_change) VALUES (?, ?)`, [id, change]);
+            const actionType = change > 0 ? 'STOCK_IN' : 'STOCK_OUT';
+            const actionText = change > 0 ? `Restocked ${Math.abs(change)} ${row.unit}` : `Used ${Math.abs(change)} ${row.unit}`;
+            logActivity(actionType, `${actionText} for ${row.name} (Now: ${newQty})`);
+
+            res.json({ success: true, newQuantity: newQty });
+        });
+    });
+});
+
 // Delete item
 app.delete('/api/items/:id', (req, res) => {
     const { id } = req.params;

@@ -109,7 +109,8 @@ body {
     margin-bottom: 5px;
 }
 
-.nav-btn:hover, .nav-btn.active {
+.nav-btn:hover,
+.nav-btn.active {
     background-color: rgba(255, 255, 255, 0.1);
     color: var(--white);
 }
@@ -189,7 +190,8 @@ header {
     margin-top: 20px;
 }
 
-.styled-table th, .styled-table td {
+.styled-table th,
+.styled-table td {
     text-align: left;
     padding: 12px 15px;
     border-bottom: 1px solid #e5e7eb;
@@ -212,7 +214,8 @@ header {
     margin-bottom: 20px;
 }
 
-.toolbar input, .toolbar select {
+.toolbar input,
+.toolbar select {
     padding: 10px;
     border: 1px solid #d1d5db;
     border-radius: var(--border-radius);
@@ -265,6 +268,31 @@ header {
     color: var(--primary-color);
 }
 
+.btn-adjust {
+    background: #e5e7eb;
+    border: none;
+    color: var(--text-color);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    margin: 0 5px;
+}
+
+.btn-adjust:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-adjust.minus:hover {
+    background: var(--danger);
+}
+
 /* Modal */
 .modal {
     display: none;
@@ -274,7 +302,7 @@ header {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     align-items: center;
     justify-content: center;
 }
@@ -308,7 +336,8 @@ header {
     color: var(--text-light);
 }
 
-.form-group input, .form-group select {
+.form-group input,
+.form-group select {
     width: 100%;
     padding: 10px;
     border: 1px solid #d1d5db;
@@ -343,8 +372,15 @@ header {
 
 /* Animations */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .content-section {

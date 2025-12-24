@@ -199,7 +199,14 @@ function renderItems(items) {
         row.innerHTML = `
             <td>${item.name} ${isLow ? '<i class="fa-solid fa-triangle-exclamation" style="color:var(--danger); margin-left:5px;" title="Low Stock"></i>' : ''}</td>
             <td>${item.category}</td>
-            <td>${item.quantity} ${item.unit}</td>
+            <td>
+                <div style="display:flex; align-items:center;">
+                    <button class="btn-adjust minus" onclick="adjustStock(${item.id}, -1)">-</button>
+                    <span style="min-width:40px; text-align:center;">${item.quantity}</span>
+                    <button class="btn-adjust plus" onclick="adjustStock(${item.id}, 1)">+</button> 
+                    <span style="font-size:0.85rem; color:#6b7280; margin-left:5px;">${item.unit}</span>
+                </div>
+            </td>
             <td style="white-space: nowrap;">
                 <button class="btn-icon" title="Edit Item" onclick="editItem(${item.id}, '${item.name}', '${item.category}', ${item.quantity}, '${item.unit}', ${item.min_threshold})">
                     <i class="fa-solid fa-pen"></i>
@@ -211,6 +218,29 @@ function renderItems(items) {
         `;
         list.appendChild(row);
     });
+}
+
+// Quick Stock Adjustment
+async function adjustStock(id, change) {
+    try {
+        const response = await fetch(`${API_URL}/items/${id}/adjust`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ change })
+        });
+
+        if (response.ok) {
+            // Refresh list to show new quantity
+            fetchItems();
+            // Refresh dashboard in background
+            fetchDashboardStats();
+        } else {
+            const data = await response.json();
+            alert(data.error || 'Failed to update stock');
+        }
+    } catch (error) {
+        console.error('Adjustment error:', error);
+    }
 }
 
 // Modal Functions
