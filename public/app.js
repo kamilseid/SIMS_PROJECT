@@ -460,10 +460,22 @@ function exportToCSV() {
         });
 }
 
-// Close modal when clicking outside
+function openAboutModal() {
+    document.getElementById('about-modal').style.display = 'flex';
+}
+
+function closeAboutModal() {
+    document.getElementById('about-modal').style.display = 'none';
+}
+
+// Close modals when clicking outside
 window.onclick = function (event) {
-    const modal = document.getElementById('item-modal');
-    if (event.target == modal) {
-        closeModal();
+    const itemModal = document.getElementById('item-modal');
+    const aboutModal = document.getElementById('about-modal');
+    if (event.target === itemModal) {
+        itemModal.style.display = 'none';
+    }
+    if (event.target === aboutModal) {
+        aboutModal.style.display = 'none';
     }
 }
