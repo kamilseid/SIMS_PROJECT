@@ -200,9 +200,13 @@ function renderItems(items) {
             <td>${item.name} ${isLow ? '<i class="fa-solid fa-triangle-exclamation" style="color:var(--danger); margin-left:5px;" title="Low Stock"></i>' : ''}</td>
             <td>${item.category}</td>
             <td>${item.quantity} ${item.unit}</td>
-            <td>
-                <button class="btn-icon" onclick="editItem(${item.id}, '${item.name}', '${item.category}', ${item.quantity}, '${item.unit}', ${item.min_threshold})"><i class="fa-solid fa-pen"></i></button>
-                <button class="btn-icon" onclick="deleteItem(${item.id})"><i class="fa-solid fa-trash" style="color:var(--danger)"></i></button>
+            <td style="white-space: nowrap;">
+                <button class="btn-icon" title="Edit Item" onclick="editItem(${item.id}, '${item.name}', '${item.category}', ${item.quantity}, '${item.unit}', ${item.min_threshold})">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="btn-icon" title="Delete Item" onclick="deleteItem(${item.id})">
+                    <i class="fa-solid fa-trash" style="color:var(--danger)"></i>
+                </button>
             </td>
         `;
         list.appendChild(row);
@@ -356,7 +360,11 @@ function renderLogs(logs) {
     }
 
     logs.forEach(log => {
-        const date = new Date(log.timestamp).toLocaleString();
+        // SQLite stores as UTC string "YYYY-MM-DD HH:MM:SS" without Z.
+        // Append 'Z' to force JS to treat it as UTC, so toLocaleString() converts to System Time.
+        const dateStr = log.timestamp.endsWith('Z') ? log.timestamp : log.timestamp + 'Z';
+        const date = new Date(dateStr).toLocaleString();
+
         const row = document.createElement('tr');
         // Simple color coding for action
         let color = '#374151';
