@@ -202,7 +202,8 @@ function renderItems(items) {
             <td>
                 <div style="display:flex; align-items:center;">
                     <button class="btn-adjust minus" onclick="adjustStock(${item.id}, -1)">-</button>
-                    <span style="min-width:40px; text-align:center;">${item.quantity}</span>
+                    <!-- Added ID here for targeting -->
+                    <span id="qty-${item.id}" style="min-width:40px; text-align:center;">${item.quantity}</span>
                     <button class="btn-adjust plus" onclick="adjustStock(${item.id}, 1)">+</button> 
                     <span style="font-size:0.85rem; color:#6b7280; margin-left:5px;">${item.unit}</span>
                 </div>
@@ -220,9 +221,24 @@ function renderItems(items) {
     });
 }
 
-// Quick Stock Adjustment
+// Quick Stock Adjustment with Optimistic UI
 async function adjustStock(id, change) {
+    const qtySpan = document.getElementById(`qty-${id}`);
+    if (!qtySpan) return;
+
+    // 1. Instant Optimistic Update!
+    const currentQty = parseInt(qtySpan.innerText);
+    const newQty = currentQty + change;
+
+    if (newQty < 0) return; // Prevent negative stock
+
+    // Update UI immediately without waiting for server
+    qtySpan.innerText = newQty;
+    qtySpan.style.color = change > 0 ? 'var(--success)' : 'var(--danger)';
+    setTimeout(() => qtySpan.style.color = '', 500);
+
     try {
+        // 2. Send request in background
         const response = await fetch(`${API_URL}/items/${id}/adjust`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
@@ -230,16 +246,17 @@ async function adjustStock(id, change) {
         });
 
         if (response.ok) {
-            // Refresh list to show new quantity
-            fetchItems();
-            // Refresh dashboard in background
+            // Success: Just refresh dashboard stats in background
             fetchDashboardStats();
         } else {
+            // Failed: Revert UI
             const data = await response.json();
             alert(data.error || 'Failed to update stock');
+            qtySpan.innerText = currentQty;
         }
     } catch (error) {
         console.error('Adjustment error:', error);
+        qtySpan.innerText = currentQty;
     }
 }
 

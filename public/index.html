@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
 </head>
 
 <body>
@@ -30,6 +32,11 @@
                 <button class="nav-btn" onclick="showSection('reports')">
                     <i class="fa-solid fa-file-invoice"></i> Reports
                 </button>
+                <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                    <button class="nav-btn" onclick="openAboutModal()">
+                        <i class="fa-solid fa-circle-info"></i> About
+                    </button>
+                </div>
             </nav>
         </aside>
 
@@ -165,6 +172,25 @@
                             <button type="submit" class="btn-primary">Save Item</button>
                         </div>
                     </form>
+                </div>
+            </div>
+
+            <!-- About Modal -->
+            <div id="about-modal" class="modal">
+                <div class="modal-content" style="text-align: center;">
+                    <span class="close" onclick="closeAboutModal()">&times;</span>
+                    <h2 style="color:var(--primary-color); margin-bottom:10px;"><i
+                            class="fa-solid fa-boxes-stacked"></i> SIMS</h2>
+                    <p style="font-weight: 500; font-size: 1.1rem; margin-bottom: 20px;">Smart Inventory Management
+                        System</p>
+
+                    <div
+                        style="background-color: var(--bg-color); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 10px;">Developed By</p>
+                        <h3 style="color: var(--text-color); font-size: 1.25rem;">Group 10</h3>
+                    </div>
+
+                    <p style="color: var(--text-light); font-size: 0.8rem;">Version 1.0.0 &bull; 2024</p>
                 </div>
             </div>
 
