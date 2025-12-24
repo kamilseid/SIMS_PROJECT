@@ -386,3 +386,87 @@ header {
 .content-section {
     animation: fadeIn 0.3s ease-out;
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 15px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        overflow-x: auto;
+    }
+
+    .brand {
+        margin-bottom: 0;
+        font-size: 1.2rem;
+    }
+
+    .sidebar nav {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Hide text labels on mobile nav, just icons */
+    .nav-btn {
+        width: auto;
+        padding: 10px;
+        margin-bottom: 0;
+        justify-content: center;
+    }
+
+    .nav-btn span {
+        display: none;
+    }
+
+    .main-content {
+        padding: 15px;
+    }
+
+    /* Stack Charts */
+    div[style*="display: flex; gap: 20px;"] {
+        flex-direction: column !important;
+    }
+
+    /* Stack Header elements */
+    header {
+        margin-bottom: 20px;
+    }
+
+    #page-title {
+        font-size: 1.5rem;
+    }
+
+    /* Make tables scrollable */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    /* Toolbar Stacking */
+    .toolbar {
+        flex-direction: column;
+    }
+
+    .btn-primary {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    /* Modal Mobile */
+    .modal-content {
+        width: 90%;
+        margin: 20px;
+    }
+
+    .form-group.split {
+        flex-direction: column;
+    }
+}
