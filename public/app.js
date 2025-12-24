@@ -13,6 +13,10 @@ if (token && isLoginPage) {
     window.location.href = 'index.html';
 }
 
+// Charts
+let categoryChartInstance = null;
+let stockChartInstance = null;
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     if (isLoginPage) {
@@ -85,7 +89,7 @@ function showSection(sectionId) {
     }
 }
 
-// Fetch Dashboard Stats
+// Fetch Dashboard Stats & Render Charts
 async function fetchDashboardStats() {
     try {
         const response = await fetch(`${API_URL}/dashboard`);
@@ -112,9 +116,59 @@ async function fetchDashboardStats() {
                 lowStockList.appendChild(row);
             });
         }
+
+        // Also fetch all items to populate charts
+        const itemsResponse = await fetch(`${API_URL}/items`);
+        const items = await itemsResponse.json();
+        renderCharts(items);
+
     } catch (error) {
         console.error('Error fetching stats:', error);
     }
+}
+
+function renderCharts(items) {
+    if (items.length === 0) return;
+
+    // Prepare Data
+    const categories = {};
+    items.forEach(item => {
+        categories[item.category] = (categories[item.category] || 0) + 1;
+    });
+
+    // Pie Chart
+    const ctxPie = document.getElementById('categoryChart').getContext('2d');
+    if (categoryChartInstance) categoryChartInstance.destroy(); // Destroy old chart to avoid overlay
+
+    categoryChartInstance = new Chart(ctxPie, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(categories),
+            datasets: [{
+                data: Object.values(categories),
+                backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+            }]
+        },
+        options: { responsive: true }
+    });
+
+    // Bar Chart (Top 5 Stock)
+    const topItems = items.sort((a, b) => b.quantity - a.quantity).slice(0, 5);
+    const ctxBar = document.getElementById('stockChart').getContext('2d');
+    if (stockChartInstance) stockChartInstance.destroy();
+
+    stockChartInstance = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: topItems.map(i => i.name),
+            datasets: [{
+                label: 'Quantity',
+                data: topItems.map(i => i.quantity),
+                backgroundColor: '#4f46e5'
+            }]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    });
 }
 
 // Fetch Items with Search & Filter
@@ -232,22 +286,22 @@ async function deleteItem(id) {
 // Reports & Trends
 async function fetchReports() {
     try {
-        // Fetch usage logs from a new endpoint (need to add to backend first, but for now we'll simulate or just export items)
-        // For simplicity in this lightweight version, we'll implement "Export Inventory" and "Low Stock Report"
-        const response = await fetch(`${API_URL}/items`);
-        const items = await response.json();
+        // Fetch Real predictions
+        const response = await fetch(`${API_URL}/predictions`);
+        const predictions = await response.json();
+        displayUsageTrends(predictions);
 
-        displayUsageTrends(items);
+        // Fetch Logs
+        const logsResponse = await fetch(`${API_URL}/logs`);
+        const logs = await logsResponse.json();
+        renderLogs(logs);
+
     } catch (error) {
         console.error('Error fetching reports:', error);
     }
 }
 
 function displayUsageTrends(items) {
-    // Simple prediction logic: Randomly simulate a "days remaining" for demo purposes
-    // In a real app, we'd query the `usage_logs` table to calculate explicit daily usage rate.
-    // Here we will just show a "Estimated Days Left" based on a mock daily usage.
-
     const container = document.getElementById('reports-content');
     if (!container) return;
 
@@ -257,8 +311,8 @@ function displayUsageTrends(items) {
                 <tr>
                     <th>Item</th>
                     <th>Current Stock</th>
-                    <th>Est. Daily Usage (Mock)</th>
-                    <th>Days Until Out</th>
+                    <th>Avg Daily Usage (7 Days)</th>
+                    <th>Est. Days Left</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -266,17 +320,21 @@ function displayUsageTrends(items) {
     `;
 
     items.forEach(item => {
-        // Mock usage rate between 1 and 5 units per day
-        const mockUsageRate = Math.floor(Math.random() * 5) + 1;
-        const daysLeft = Math.floor(item.quantity / mockUsageRate);
-        const status = daysLeft < 5 ? '<span class="status-badge status-low">Critical</span>' : '<span class="status-badge status-ok">Good</span>';
+        const daysLeft = item.daysLeft;
+        let status = '<span class="status-badge status-ok">Good</span>';
+        if (daysLeft < 5) status = '<span class="status-badge status-low">Critical</span>';
+        if (daysLeft > 365) status = '<span class="status-badge status-ok">Stable</span>';
+
+        // Format usage
+        const usageText = item.avgDailyUsage > 0 ? `${item.avgDailyUsage} ${item.unit}/day` : 'No recent usage';
+        const daysText = daysLeft > 365 ? '> 1 Year' : `${daysLeft} days`;
 
         html += `
             <tr>
                 <td>${item.name}</td>
-                <td>${item.quantity} ${item.unit}</td>
-                <td>~${mockUsageRate} / day</td>
-                <td>${daysLeft} days</td>
+                <td>${item.currentStock} ${item.unit}</td>
+                <td>${usageText}</td>
+                <td>${daysText}</td>
                 <td>${status}</td>
             </tr>
         `;
@@ -284,6 +342,32 @@ function displayUsageTrends(items) {
 
     html += '</tbody></table>';
     container.innerHTML = html;
+}
+
+function renderLogs(logs) {
+    const list = document.getElementById('activity-log-list');
+    list.innerHTML = '';
+
+    if (logs.length === 0) {
+        list.innerHTML = '<tr><td colspan="3" style="text-align:center;">No activity logged yet.</td></tr>';
+        return;
+    }
+
+    logs.forEach(log => {
+        const date = new Date(log.timestamp).toLocaleString();
+        const row = document.createElement('tr');
+        // Simple color coding for action
+        let color = '#374151';
+        if (log.action.includes('DELETE')) color = 'var(--danger)';
+        if (log.action.includes('ADD')) color = 'var(--success)';
+
+        row.innerHTML = `
+            <td>${date}</td>
+            <td style="font-weight:600; color:${color}">${log.action}</td>
+            <td>${log.details}</td>
+        `;
+        list.appendChild(row);
+    });
 }
 
 function exportToCSV() {

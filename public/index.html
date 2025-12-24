@@ -9,6 +9,7 @@
     <!-- Google Fonts for premium look -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -57,6 +58,18 @@
                     <div class="stat-card low-stock">
                         <h3>Low Stock Alerts</h3>
                         <p id="low-stock-count">0</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+                    <div class="section-container" style="flex: 1;">
+                        <h3>Inventory Distribution</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                    <div class="section-container" style="flex: 1;">
+                        <h3>Stock Levels (Top 5)</h3>
+                        <canvas id="stockChart"></canvas>
                     </div>
                 </div>
 
@@ -172,6 +185,24 @@
                     <div id="reports-content">
                         <!-- Filled by JS -->
                         <p style="text-align:center; color:#6b7280; padding:20px;">Loading usage data...</p>
+                    </div>
+                </div>
+
+                <div class="section-container" style="margin-top: 30px;">
+                    <h3><i class="fa-solid fa-history"></i> Recent Activity Log</h3>
+                    <div class="table-responsive">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activity-log-list">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>

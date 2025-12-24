@@ -3,15 +3,17 @@
 A lightweight, web-based inventory management application designed for small businesses, labs, and departments.
 
 ## 🚀 Features
-- **Dashboard**: Real-time overview of total items and low-stock alerts.
-- **Inventory Management**: Add, edit, and delete items with categorization and unit tracking.
-- **Low-Stock Alerts**: Visual warnings when items fall below their minimum threshold.
-- **Usage Trends**: Automated estimation of reliable stock duration.
-- **Search & Filter**: Quickly find items by name or category.
-- **Reports**: Export inventory data to CSV for external analysis.
+- **📊 Visual Dashboard**: Interactive Pie and Bar charts for real-time stock analysis.
+- **🔐 Secure Login**: Admin authentication system to protect inventory data.
+- **📦 Inventory Management**: Add, edit, and delete items with categorization and unit tracking.
+- **⚠️ Low-Stock Alerts**: Visual warnings when items fall below their minimum threshold.
+- **🧠 Smart Predictions**: AI-driven estimation of when stock will run out based on actual 7-day usage history.
+- **📝 Activity Log**: Comprehensive audit trail tracking all user actions (Add/Edit/Delete).
+- **🔍 Search & Filter**: Quickly find items by name or category.
+- **📄 Reports**: Export inventory data to CSV for external analysis.
 
 ## 🛠️ Technology Stack
-- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
+- **Frontend**: HTML5, CSS3, JavaScript (Vanilla), **Chart.js** (Data Visualization)
 - **Backend**: Node.js + Express
 - **Database**: SQLite (Zero-configuration, serverless SQL database)
 
