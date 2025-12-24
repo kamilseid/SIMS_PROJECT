@@ -28,6 +28,44 @@ body {
     overflow: hidden;
 }
 
+/* Login Page Styles */
+.login-body {
+    background: linear-gradient(135deg, var(--sidebar-bg) 0%, #111827 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.login-container {
+    background: var(--white);
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 350px;
+    text-align: center;
+}
+
+.brand-login {
+    margin-bottom: 30px;
+    color: var(--primary-color);
+}
+
+.brand-login i {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.brand-login h1 {
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+.brand-login p {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
 /* Layout */
 .app-container {
     display: flex;

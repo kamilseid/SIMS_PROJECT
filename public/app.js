@@ -1,10 +1,70 @@
 const API_URL = '/api';
 let currentEditId = null;
 
+// Auth Logic
+const isLoginPage = window.location.pathname.endsWith('login.html');
+const token = localStorage.getItem('sims_token');
+
+if (!token && !isLoginPage) {
+    window.location.href = 'login.html';
+}
+
+if (token && isLoginPage) {
+    window.location.href = 'index.html';
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    fetchDashboardStats();
+    if (isLoginPage) {
+        setupLogin();
+    } else {
+        fetchDashboardStats();
+        setupLogout();
+    }
 });
+
+function setupLogin() {
+    const loginForm = document.getElementById('login-form');
+    if (!loginForm) return;
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const errorMsg = document.getElementById('error-msg');
+
+        try {
+            const response = await fetch(`${API_URL}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                localStorage.setItem('sims_token', data.token);
+                window.location.href = 'index.html';
+            } else {
+                errorMsg.innerText = data.message;
+                errorMsg.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            errorMsg.innerText = 'Server error. Try again.';
+            errorMsg.style.display = 'block';
+        }
+    });
+}
+
+function setupLogout() {
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('sims_token');
+            window.location.href = 'login.html';
+        });
+    }
+}
 
 // Navigation
 function showSection(sectionId) {

@@ -48,6 +48,17 @@ function initializeDatabase() {
 
 // Routes
 
+// Login Endpoint
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    // Hardcoded credentials for simplicity as requested
+    if (username === 'admin' && password === 'admin123') {
+        res.json({ success: true, token: 'mock-token-12345' });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+});
+
 // Get all items
 app.get('/api/items', (req, res) => {
     const { search, category } = req.query;

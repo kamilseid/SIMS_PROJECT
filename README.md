@@ -39,6 +39,11 @@ A lightweight, web-based inventory management application designed for small bus
    npm install
    ```
 
+### 👤 Login Credentials
+The system comes with a default admin account:
+- **Username**: `admin`
+- **Password**: `admin123`
+
 ### ▶️ Running the Application
 1. **Start the Server**:
    Run the startup command:
